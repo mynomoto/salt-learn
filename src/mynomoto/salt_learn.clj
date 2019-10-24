@@ -1,7 +1,7 @@
 (ns mynomoto.salt-learn
-  (:gen-class))
+  (:require
+    salt))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(comment
+  (spit "Tic.tla" (salt/transpile "src/Tic.clj"))
+  (spit "Clock.tla" (salt/transpile "src/Clock.clj")))

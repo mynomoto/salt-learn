@@ -1,0 +1,3 @@
+{:lint-as {salt.lang/VARIABLE clojure.core/declare
+           salt.lang/A clojure.core/let
+           salt.lang/E clojure.core/let}}
