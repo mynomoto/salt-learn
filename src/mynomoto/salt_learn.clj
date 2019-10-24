@@ -3,5 +3,5 @@
     salt))
 
 (comment
-  (spit "Tic.tla" (salt/transpile "src/Tic.clj"))
+  (spit "DieHard.tla" (salt/transpile "src/DieHard.clj"))
   (spit "Clock.tla" (salt/transpile "src/Clock.clj")))
