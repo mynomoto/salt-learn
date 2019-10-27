@@ -1,7 +1,7 @@
 (ns Clock
   (:require
-    [salt.lang :refer :all]
-    [tlaplus.Integers :refer :all]))
+    [salt.lang :refer [VARIABLE always- mod*]]
+    [tlaplus.Integers]))
 
 (VARIABLE clock)
 

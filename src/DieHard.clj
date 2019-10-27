@@ -1,7 +1,7 @@
 (ns DieHard
   (:require
-    [salt.lang :refer :all]
-    [tlaplus.Integers :refer :all]))
+    [salt.lang :refer [VARIABLE range*]]
+    [tlaplus.Integers]))
 
 (VARIABLE big small)
 

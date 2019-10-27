@@ -1,9 +1,8 @@
 (ns test-DieHard
   (:require
-    [DieHard :refer :all]
-    [clojure.test :refer :all]
-    [salt]
-    [salt.lang :refer :all]))
+    [DieHard :refer [BigToSmall EmptyBig EmptySmall FillBig FillSmall Init Min SmallToBig TypeOk]]
+    [clojure.test :refer [are deftest is run-tests use-fixtures]]
+    [salt]))
 
 (use-fixtures :each (salt/namespace-fixture 'test-DieHard))
 
