@@ -1,9 +1,8 @@
 (ns test-Clock
   (:require
-    [Clock :refer :all]
-    [clojure.test :refer :all]
-    [salt]
-    [salt.lang :refer :all]))
+    [Clock :refer [Init Tick]]
+    [clojure.test :refer [deftest is run-tests use-fixtures]]
+    [salt]))
 
 (use-fixtures :each (salt/namespace-fixture 'test-Clock))
 

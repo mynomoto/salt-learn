@@ -1,3 +1,7 @@
-{:lint-as {salt.lang/VARIABLE clojure.core/declare
+{:output {:include-files ["^src" "^test" "^<stdin>$"]}
+ :linters {:unresolved-symbol {:exclude [small'
+                                         big'
+                                         clock']}}
+ :lint-as {salt.lang/VARIABLE clojure.core/declare
            salt.lang/A clojure.core/let
            salt.lang/E clojure.core/let}}
