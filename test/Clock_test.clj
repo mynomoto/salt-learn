@@ -1,10 +1,10 @@
-(ns test-Clock
+(ns Clock-test
   (:require
-    [Clock :refer [Init Tick]]
+    [Clock :refer :all]
     [clojure.test :refer [deftest is run-tests use-fixtures]]
     [salt]))
 
-(use-fixtures :each (salt/namespace-fixture 'test-Clock))
+(use-fixtures :each (salt/namespace-fixture 'Clock-test))
 
 (salt/evaluate {}
                '{clock 0}

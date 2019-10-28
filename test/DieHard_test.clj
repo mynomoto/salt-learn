@@ -1,10 +1,10 @@
-(ns test-DieHard
+(ns DieHard-test
   (:require
-    [DieHard :refer [BigToSmall EmptyBig EmptySmall FillBig FillSmall Init Min SmallToBig TypeOk]]
+    [DieHard :refer :all]
     [clojure.test :refer [are deftest is run-tests use-fixtures]]
     [salt]))
 
-(use-fixtures :each (salt/namespace-fixture 'test-DieHard))
+(use-fixtures :each (salt/namespace-fixture 'DieHard-test))
 
 (deftest test-init
   (is (salt/evaluate
