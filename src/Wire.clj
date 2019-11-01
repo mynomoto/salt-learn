@@ -3,48 +3,71 @@
     [salt.lang :refer :all]
     [tlaplus.Integers]))
 
-(VARIABLE people acc sender receiver amount op)
+(VARIABLE people acc pc sender receiver amount)
 
-(defn Init []
-  (and (= people #{"alice" "bob"})
-       (= acc (fm- [a people] 5))
-       (= sender "alice")
-       (= receiver "bob")
-       (= amount 3)
-       (= op "withdraw")))
+(def vars VARS-)
 
 (defn NoOverdrafts []
   (A [p people]
     (>= (get* acc p) 0)))
 
-(defn Withdraw []
-  (and (= op "withdraw")
-       (= acc' (EXCEPT acc [sender] (- (get* acc sender) amount)))
-       (= op' "deposit")
-       (CHANGED- [acc op])))
+(defn EventuallyConsistent []
+  (eventually- (always- (= (+ (get* acc "alice") (get* acc "bob")) 10))))
 
-(defn Deposit []
-  (and (= op "deposit")
-       (= acc' (EXCEPT acc [receiver] (+ (get* acc receiver) amount)))
-       (= op' "done")
-       (CHANGED- [acc op])))
+(defn ProcSet []
+  (range* 1 2))
+
+(defn Init []
+  (and
+    (= people #{"alice" "bob"})
+    (= acc (fm- [p people] 5))
+    (= sender (fm- [self (ProcSet)] "alice"))
+    (= receiver (fm- [self (ProcSet)] "bob"))
+    (contains? (maps- (ProcSet) (range* 1 (get* acc (get* sender (CHOOSE [self (ProcSet)] true))))) amount)
+    (= pc (fm- [self (ProcSet)] "CheckAndWithdraw"))))
+
+(defn CheckAndWithdraw [self]
+  (and
+    (= (get* pc self) "CheckAndWithdraw")
+    (if (<= (get* amount self) (get* acc (get* sender self)))
+      (and
+        (= acc' (EXCEPT acc [(get* sender self)] (- (get* acc (get* sender self)) (get* amount self))))
+        (= pc' (EXCEPT pc [self] "Deposit")))
+      (and
+        (= acc' acc)
+        (= pc' (EXCEPT pc [self] "Done"))))
+    (CHANGED- [acc pc])))
+
+(defn Deposit [self]
+  (and
+    (= (get* pc self) "Deposit")
+    (= acc' (EXCEPT acc [(get* receiver self)] (+ (get* acc (get* receiver self)) (get* amount self))))
+    (= pc' (EXCEPT pc [self] "Done"))
+    (CHANGED- [acc pc])))
+
+(defn Wire [self]
+  (or
+    (CheckAndWithdraw self)
+    (Deposit self)))
 
 (defn Terminating []
-  (and (= op "done")
-       (CHANGED- [])))
+  (and
+    (A [self (ProcSet)]
+      (= (get* pc self) "Done"))
+    (UNCHANGED vars)))
 
 (defn Next []
-  (or (Withdraw)
-      (Deposit)
-      (Terminating)))
+  (or
+    (E [self (ProcSet)]
+      (Wire self))
+    (Terminating)))
 
 (defn Spec []
   (and
     (Init)
-    (always- (Next) VARS-)))
-
-(defn End []
-  (= op "done"))
+    (always- (Next) vars)))
 
 (defn Termination []
-  (eventually- (End)))
+  (eventually-
+    (A [self (ProcSet)]
+      (= (get* pc self) "Done"))))
